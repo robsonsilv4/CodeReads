@@ -15,7 +15,7 @@ FutureOr<Response> onRequest(RequestContext context) {
 Future<Response> _onPost(RequestContext context) async {
   final repository = context.read<AuthorRepository>();
   final data = await context.request.json() as Map<String, dynamic>;
-  final validated = Zod.validate(
+  final validation = Zod.validate(
     data: data,
     params: {
       'email': Zod().email().required(),
@@ -23,13 +23,16 @@ Future<Response> _onPost(RequestContext context) async {
       'description': Zod().max(400).required(),
     },
   );
-  if (validated.isNotValid) {
+  if (validation.isNotValid) {
     return Response.json(
       statusCode: HttpStatus.badRequest,
-      body: validated.result,
+      body: validation.result,
     );
   }
   final author = NewAuthorRequest.fromJson(data);
   await repository.save(author.toModel());
-  return Response.json(body: author.toJson());
+  return Response.json(
+    statusCode: HttpStatus.created,
+    body: author.toJson(),
+  );
 }
