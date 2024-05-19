@@ -1,4 +1,4 @@
-import 'package:backend/authors/models/author.dart';
+import 'package:backend/authors/authors.dart';
 import 'package:sembast/sembast.dart';
 
 class AuthorRepository {
@@ -8,10 +8,9 @@ class AuthorRepository {
 
   static const _storeName = '_authors';
 
-  Future<Author> save(Author author) async {
+  Future<int> save(Author author) async {
     final store = intMapStoreFactory.store(_storeName);
-    final authorCopy = author.copyWith(createdAt: DateTime.now());
-    final key = await store.add(_database, authorCopy.toJson());
-    return authorCopy.copyWith(id: key);
+    final newAuthor = author.copyWith(createdAt: DateTime.now());
+    return store.add(_database, newAuthor.toJson());
   }
 }

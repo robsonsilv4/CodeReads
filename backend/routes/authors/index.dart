@@ -30,7 +30,6 @@ Future<Response> _onPost(RequestContext context) async {
     );
   }
   final author = NewAuthorRequest.fromJson(data);
-  return Response.json(
-    body: await repository.save(author.toModel()),
-  );
+  await repository.save(author.toModel());
+  return Response.json(body: author.toJson());
 }

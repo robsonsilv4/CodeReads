@@ -12,3 +12,10 @@ NewAuthorRequest _$NewAuthorRequestFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       description: json['description'] as String,
     );
+
+Map<String, dynamic> _$NewAuthorRequestToJson(NewAuthorRequest instance) =>
+    <String, dynamic>{
+      'email': instance.email,
+      'name': instance.name,
+      'description': instance.description,
+    };

@@ -4,7 +4,7 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'new_author_request.g.dart';
 
-@JsonSerializable(createToJson: false)
+@JsonSerializable()
 class NewAuthorRequest extends Equatable {
   const NewAuthorRequest({
     required this.email,
@@ -24,6 +24,8 @@ class NewAuthorRequest extends Equatable {
         name: name,
         description: description,
       );
+
+  Map<String, dynamic> toJson() => _$NewAuthorRequestToJson(this);
 
   @override
   List<Object?> get props => [email, name, description];
