@@ -5,13 +5,24 @@ part 'author.g.dart';
 
 @JsonSerializable()
 class Author extends Equatable {
-  const Author({
+  Author({
     required this.email,
     required this.name,
     required this.description,
     this.id,
     this.createdAt,
-  });
+  })  : assert(id == null || id > 0, 'ID must be greater than 0.'),
+        assert(email.isNotEmpty, 'Email must not be empty.'),
+        assert(name.isNotEmpty, 'Name must not be empty.'),
+        assert(description.isNotEmpty, 'Description must not be empty.'),
+        assert(
+          description.length <= 400,
+          'Description must not exceed 400 characters.',
+        ),
+        assert(
+          createdAt == null || createdAt.isBefore(DateTime.now()),
+          'Created at must be in the past.',
+        );
 
   factory Author.fromJson(Map<String, dynamic> json) => _$AuthorFromJson(json);
 
