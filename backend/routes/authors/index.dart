@@ -30,6 +30,13 @@ Future<Response> _onPost(RequestContext context) async {
     );
   }
   final author = NewAuthorRequest.fromJson(data);
+  final existingAuthor = await repository.findByEmail(author.email);
+  if (existingAuthor != null) {
+    return Response.json(
+      statusCode: HttpStatus.conflict,
+      body: {'message': 'Author with email ${author.email} already exists.'},
+    );
+  }
   await repository.save(author.toModel());
   return Response.json(
     statusCode: HttpStatus.created,
