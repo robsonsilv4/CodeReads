@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:backend/categories/categories.dart';
+import 'package:backend/validators/validators.dart';
 import 'package:dart_frog/dart_frog.dart';
 
 FutureOr<Response> onRequest(RequestContext context) {
@@ -28,12 +29,14 @@ Future<Response> _onPost(RequestContext context) async {
     );
   }
   final repository = context.read<CategoryRepository>();
-  final existingCategory = await repository.findByName(category.name);
+  final existingValidator = context.read<ExistingValidator>();
+  final existingCategory = await existingValidator.validate(
+    storeName: repository.storeName,
+    fieldName: 'name',
+    value: category.name,
+  );
   if (existingCategory != null) {
-    return Response.json(
-      statusCode: HttpStatus.conflict,
-      body: {'message': 'Category already exists.'},
-    );
+    return existingCategory.toResponse();
   }
   await repository.save(category.toJson());
   return Response.json(

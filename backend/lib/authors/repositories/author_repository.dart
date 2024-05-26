@@ -6,15 +6,15 @@ class AuthorRepository {
 
   final Database _database;
 
-  static const _storeName = '_authors';
+  String get storeName => '_authors';
 
   Future<int> save(Author author) async {
-    return _database.save(_storeName, author.toJson());
+    return _database.save(storeName, author.toJson());
   }
 
   Future<Author?> findByEmail(String email) async {
     final data = await _database.findBy(
-      storeName: _storeName,
+      storeName: storeName,
       fieldName: 'email',
       value: email,
     );

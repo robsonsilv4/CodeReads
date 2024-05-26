@@ -6,15 +6,15 @@ class CategoryRepository {
 
   final Database _database;
 
-  static const _storeName = '_categories';
+  String get storeName => '_categories';
 
   Future<int> save(Map<String, dynamic> data) async {
-    return _database.save(_storeName, data);
+    return _database.save(storeName, data);
   }
 
   Future<Category?> findByName(String name) async {
     final data = await _database.findBy(
-      storeName: _storeName,
+      storeName: storeName,
       fieldName: 'name',
       value: name,
     );
