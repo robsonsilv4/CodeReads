@@ -14,7 +14,13 @@ FutureOr<Response> onRequest(RequestContext context) {
 
 Future<Response> _onPost(RequestContext context) async {
   final repository = context.read<AuthorRepository>();
-  final data = await context.request.json() as Map<String, dynamic>;
+  final data = await context.request.json();
+  if (data is! Map<String, dynamic>) {
+    return Response.json(
+      statusCode: HttpStatus.badRequest,
+      body: {'message': 'Invalid request body.'},
+    );
+  }
   final validation = Zod.validate(
     data: data,
     params: {
