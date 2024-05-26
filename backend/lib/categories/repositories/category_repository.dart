@@ -1,5 +1,5 @@
 import 'package:backend/categories/categories.dart';
-import 'package:sembast/sembast.dart';
+import 'package:backend/database/database.dart';
 
 class CategoryRepository {
   CategoryRepository({required Database database}) : _database = database;
@@ -9,14 +9,15 @@ class CategoryRepository {
   static const _storeName = '_categories';
 
   Future<int> save(Map<String, dynamic> data) async {
-    final store = intMapStoreFactory.store(_storeName);
-    return store.add(_database, data);
+    return _database.save(_storeName, data);
   }
 
   Future<Category?> findByName(String name) async {
-    final store = intMapStoreFactory.store(_storeName);
-    final query = Finder(filter: Filter.equals('name', name));
-    final record = await store.findFirst(_database, finder: query);
-    return record == null ? null : Category.fromJson(record.value);
+    final data = await _database.findBy(
+      storeName: _storeName,
+      fieldName: 'name',
+      value: name,
+    );
+    return data == null ? null : Category.fromJson(data);
   }
 }

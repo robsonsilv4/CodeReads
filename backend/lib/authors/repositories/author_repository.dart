@@ -1,5 +1,5 @@
 import 'package:backend/authors/authors.dart';
-import 'package:sembast/sembast.dart';
+import 'package:backend/database/database.dart';
 
 class AuthorRepository {
   const AuthorRepository({required Database database}) : _database = database;
@@ -9,15 +9,15 @@ class AuthorRepository {
   static const _storeName = '_authors';
 
   Future<int> save(Author author) async {
-    final store = intMapStoreFactory.store(_storeName);
-    final newAuthor = author.copyWith(createdAt: DateTime.now());
-    return store.add(_database, newAuthor.toJson());
+    return _database.save(_storeName, author.toJson());
   }
 
   Future<Author?> findByEmail(String email) async {
-    final store = intMapStoreFactory.store(_storeName);
-    final query = Finder(filter: Filter.equals('email', email));
-    final record = await store.findFirst(_database, finder: query);
-    return record == null ? null : Author.fromJson(record.value);
+    final data = await _database.findBy(
+      storeName: _storeName,
+      fieldName: 'email',
+      value: email,
+    );
+    return data == null ? null : Author.fromJson(data);
   }
 }
